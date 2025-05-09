@@ -911,6 +911,11 @@ static CKeyInfo gs_aKeys[] =
 		{Localizable("Toggle dummy"), "toggle cl_dummy 0 1", 0, 0},
 		{Localizable("Dummy copy"), "toggle cl_dummy_copy_moves 0 1", 0, 0},
 		{Localizable("Hammerfly dummy"), "toggle cl_dummy_hammer 0 1", 0, 0},
+		
+		{Localizable("/points"), "say /points", 0, 0},
+		{Localizable("/rank"), "say /rank", 0, 0},
+		{Localizable("/mapinfo"), "say /mapinfo", 0, 0},
+		{Localizable("/top5"), "say /top5", 0, 0},
 
 		{Localizable("Emoticon"), "+emote", 0, 0},
 		{Localizable("Spectator mode"), "+spectate", 0, 0},
@@ -1188,7 +1193,7 @@ void CMenus::RenderSettingsControls(CUIRect MainView)
 	const float Margin = 10.0f;
 	const float HeaderHeight = FontSize + 5.0f + Margin;
 
-	CUIRect MouseSettings, MovementSettings, WeaponSettings, VotingSettings, ChatSettings, DummySettings, MiscSettings, JoystickSettings, ResetButton, Button;
+	CUIRect MouseSettings, MovementSettings, WeaponSettings, VotingSettings, ChatSettings, DummySettings, TestSettings, MiscSettings, JoystickSettings, ResetButton, Button;
 	MainView.VSplitMid(&MouseSettings, &VotingSettings);
 
 	// mouse settings
@@ -1313,7 +1318,7 @@ void CMenus::RenderSettingsControls(CUIRect MainView)
 	// dummy settings
 	{
 		DummySettings.HSplitTop(Margin, nullptr, &DummySettings);
-		DummySettings.HSplitTop(100.0f, &DummySettings, &MiscSettings);
+		DummySettings.HSplitTop(100.0f, &DummySettings, &TestSettings);
 		if(s_ScrollRegion.AddRect(DummySettings))
 		{
 			DummySettings.Draw(ColorRGBA(1, 1, 1, 0.25f), IGraphics::CORNER_ALL, 10.0f);
@@ -1323,6 +1328,22 @@ void CMenus::RenderSettingsControls(CUIRect MainView)
 			Ui()->DoLabel(&Button, Localize("Dummy"), FontSize, TEXTALIGN_ML);
 
 			DoSettingsControlsButtons(29, 32, DummySettings);
+		}
+	}
+
+	// Test settings
+	{
+		TestSettings.HSplitTop(Margin, nullptr, &TestSettings);
+		TestSettings.HSplitTop(125.0f, &TestSettings, &MiscSettings);
+		if(s_ScrollRegion.AddRect(TestSettings))
+		{
+			TestSettings.Draw(ColorRGBA(1, 1, 1, 0.25f), IGraphics::CORNER_ALL, 10.0f);
+			TestSettings.VMargin(Margin, &TestSettings);
+
+			TestSettings.HSplitTop(HeaderHeight, &Button, &TestSettings);
+			Ui()->DoLabel(&Button, Localize("TEST"), FontSize, TEXTALIGN_ML);
+
+			DoSettingsControlsButtons(32, 36, TestSettings);
 		}
 	}
 
@@ -1338,7 +1359,7 @@ void CMenus::RenderSettingsControls(CUIRect MainView)
 			MiscSettings.HSplitTop(HeaderHeight, &Button, &MiscSettings);
 			Ui()->DoLabel(&Button, Localize("Miscellaneous"), FontSize, TEXTALIGN_ML);
 
-			DoSettingsControlsButtons(32, 44, MiscSettings);
+			DoSettingsControlsButtons(36, 48, MiscSettings);
 		}
 	}
 
@@ -2334,7 +2355,8 @@ void CMenus::RenderSettingsAppearance(CUIRect MainView)
 	for(int Tab = APPEARANCE_TAB_HUD; Tab < NUMBER_OF_APPEARANCE_TABS; ++Tab)
 	{
 		TabBar.VSplitLeft(TabWidth, &Button, &TabBar);
-		const int Corners = Tab == APPEARANCE_TAB_HUD ? IGraphics::CORNER_L : Tab == NUMBER_OF_APPEARANCE_TABS - 1 ? IGraphics::CORNER_R : IGraphics::CORNER_NONE;
+		const int Corners = Tab == APPEARANCE_TAB_HUD ? IGraphics::CORNER_L : Tab == NUMBER_OF_APPEARANCE_TABS - 1 ? IGraphics::CORNER_R :
+															     IGraphics::CORNER_NONE;
 		if(DoButton_MenuTab(&s_aPageTabs[Tab], apTabNames[Tab], s_CurTab == Tab, &Button, Corners, nullptr, nullptr, nullptr, nullptr, 4.0f))
 		{
 			s_CurTab = Tab;
